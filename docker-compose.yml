@@ -26,7 +26,7 @@ services:
     container_name: directus
     restart: always
     ports:
-      - "8055:8055"
+      - "22:22"
     environment:
       KEY: veryinsecurekeydonotuse
       ADMIN_EMAIL: admin@amtcm.com
@@ -39,6 +39,9 @@ services:
       DATABASE_PASSWORD: amt237
     depends_on:
       - db
+    volumes:
+      -./uploads:/directus/uploads
+      -./extensions:/directus/extensions
 
   db:
     image: postgres:13
@@ -47,9 +50,11 @@ services:
     environment:
       POSTGRES_DB: directus
       POSTGRES_USER: directus
-      POSTGRES_PASSWORD: <your-database-password>
+      POSTGRES_PASSWORD: amt237
     volumes:
       - directus_db_data:/var/lib/postgresql/data
 
 volumes:
+  - ./uploads:/directus/uploads
+  - ./extensions:/directus/extensions
   directus_db_data:
