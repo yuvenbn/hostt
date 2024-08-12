@@ -1,19 +1,55 @@
-version: "3"
+# version: "3"
+# services:
+#   directus:
+#     image: directus/directus:10.9.2
+#     ports:
+#       - 8055:8055
+#     volumes:
+#       - ./database:/directus/database
+#       - ./uploads:/directus/uploads
+#       - ./extensions:/directus/extensions
+#     environment:
+#       KEY: "veryinsecurekeydonotuse"
+#       SECRET: "veryinsecurekeydonotuse"
+#       ADMIN_EMAIL: "admin@amtcm.com"
+#       ADMIN_PASSWORD: "admind1r3"
+#       DB_CLIENT: "sqlite3"
+#       DB_FILENAME: "/directus/database/data.db"
+#       WEBSOCKETS_ENABLED: "true" 
+#       EXTENSIONS_AUTO_RELOAD: "true"
+
+version: '3.7'
+
 services:
   directus:
-    image: directus/directus:10.9.2
+    image: directus/directus:latest
+    container_name: directus
+    restart: always
     ports:
-      - 8055:8055
-    volumes:
-      - ./database:/directus/database
-      - ./uploads:/directus/uploads
-      - ./extensions:/directus/extensions
+      - "8055:8055"
     environment:
-      KEY: "veryinsecurekeydonotuse"
-      SECRET: "veryinsecurekeydonotuse"
-      ADMIN_EMAIL: "admin@amtcm.com"
-      ADMIN_PASSWORD: "admind1r3"
-      DB_CLIENT: "sqlite3"
-      DB_FILENAME: "/directus/database/data.db"
-      WEBSOCKETS_ENABLED: "true" 
-      EXTENSIONS_AUTO_RELOAD: "true"
+      KEY: veryinsecurekeydonotuse
+      ADMIN_EMAIL: admin@amtcm.com
+      ADMIN_PASSWORD: admind1r3
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: directus
+      DATABASE_USER: directus
+      DATABASE_PASSWORD: amt237
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    container_name: directus_db
+    restart: always
+    environment:
+      POSTGRES_DB: directus
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: <your-database-password>
+    volumes:
+      - directus_db_data:/var/lib/postgresql/data
+
+volumes:
+  directus_db_data:
